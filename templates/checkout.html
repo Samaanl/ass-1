@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Checkout{% endblock %}
+{% block content %}
+<h1 class="page-title">Checkout</h1>
+<div class="two-col">
+  <form class="panel form" method="post" action="{{ url_for('checkout') }}">
+    <h2>Shipping details</h2>
+    <label>Full name
+      <input name="customer_name" value="{{ form.customer_name or '' }}" required>
+    </label>
+    <label>Email
+      <input type="email" name="email" value="{{ form.email or '' }}" required>
+    </label>
+    <label>Delivery address
+      <textarea name="address" rows="3" required>{{ form.address or '' }}</textarea>
+    </label>
+    <h2>Payment</h2>
+    <div class="radios">
+      {% for method in ["Cash on Delivery", "UPI on Delivery"] %}
+      <label class="radio">
+        <input type="radio" name="payment_method" value="{{ method }}"
+               {% if form.payment_method == method or (not form.payment_method and loop.first) %}checked{% endif %}>
+        {{ method }}
+      </label>
+      {% endfor %}
+    </div>
+    <button class="btn btn-primary btn-block">Place order · {{ totals.total|inr }}</button>
+  </form>
+
+  <aside class="panel summary">
+    <h2>Order summary</h2>
+    {% for item in items %}
+    <div class="sum-row"><span>{{ item.emoji }} {{ item.name }} × {{ item.quantity }}</span><span>{{ item.line_total|inr }}</span></div>
+    {% endfor %}
+    <hr>
+    <div class="sum-row"><span>Subtotal</span><span>{{ totals.subtotal|inr }}</span></div>
+    <div class="sum-row"><span>Shipping</span><span>{% if totals.shipping %}{{ totals.shipping|inr }}{% else %}FREE{% endif %}</span></div>
+    <div class="sum-row sum-total"><span>Total</span><span>{{ totals.total|inr }}</span></div>
+  </aside>
+</div>
+{% endblock %}

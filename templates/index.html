@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Shop{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>Tech essentials, delivered.</h1>
+  <p>Browse the catalogue, add items to your cart and check out.</p>
+</section>
+
+<div class="chips">
+  <a href="{{ url_for('index') }}" class="chip {% if not active_category %}chip-active{% endif %}">All</a>
+  {% for c in categories %}
+  <a href="{{ url_for('index', category=c) }}" class="chip {% if c == active_category %}chip-active{% endif %}">{{ c }}</a>
+  {% endfor %}
+</div>
+
+<div class="grid">
+  {% for p in products %}
+  <article class="card">
+    <div class="thumb">{{ p.emoji }}</div>
+    <div class="card-body">
+      <span class="category">{{ p.category }}</span>
+      <h3>{{ p.name }}</h3>
+      <p class="muted">{{ p.description }}</p>
+      <div class="price-row">
+        <span class="price">{{ p.price|inr }}</span>
+        <span class="stock {% if p.stock < 5 %}stock-low{% endif %}">{{ p.stock }} in stock</span>
+      </div>
+      <form method="post" action="{{ url_for('add_to_cart', product_id=p.id) }}">
+        {% if p.stock > 0 %}
+        <button class="btn btn-primary btn-block">Add to cart</button>
+        {% else %}
+        <button class="btn btn-block" disabled>Out of stock</button>
+        {% endif %}
+      </form>
+    </div>
+  </article>
+  {% else %}
+  <p class="muted">No products found.</p>
+  {% endfor %}
+</div>
+{% endblock %}

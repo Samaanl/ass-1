@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}System status{% endblock %}
+{% block content %}
+<h1 class="page-title">System status</h1>
+<p class="muted">In the monolithic design every feature lives in one deployable unit that shares one database.</p>
+
+<div class="diagram">
+  <div class="node node-client">Browser</div>
+  <div class="arrow">→</div>
+  <div class="node node-app">
+    <strong>cloudcart-monolith</strong>
+    <span>host <code>{{ hostname }}</code></span>
+    <ul>
+      <li>Catalogue</li><li>Cart</li><li>Checkout</li><li>Orders</li>
+    </ul>
+  </div>
+  <div class="arrow">→</div>
+  <div class="node node-db">
+    <strong>One database</strong>
+    <span><code>{{ db_label }}</code></span>
+    <ul>
+      <li>products: {{ counts.products }}</li>
+      <li>cart_items: {{ counts.cart_items }}</li>
+      <li>orders: {{ counts.orders }}</li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

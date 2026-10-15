@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Order #{{ order.id }}{% endblock %}
+{% block content %}
+{% if new %}
+<div class="confirm">
+  <div class="confirm-icon">✓</div>
+  <h1>Order confirmed!</h1>
+  <p>Thank you, {{ order.customer_name }}. Order <strong>#{{ order.id }}</strong> has been placed.</p>
+</div>
+{% else %}
+<h1 class="page-title">Order #{{ order.id }}</h1>
+{% endif %}
+
+<div class="two-col">
+  <div class="panel">
+    <h2>Items</h2>
+    {% for i in order["items"] %}
+    <div class="line-item">
+      <div class="thumb thumb-sm">{{ i.emoji }}</div>
+      <div class="line-info"><strong>{{ i.name }}</strong><span class="muted">{{ i.price|inr }} × {{ i.quantity }}</span></div>
+      <span class="line-total">{{ i.line_total|inr }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  <aside class="panel summary">
+    <h2>Details</h2>
+    <div class="sum-row"><span>Placed</span><span>{{ order.created_at }}</span></div>
+    <div class="sum-row"><span>Payment</span><span>{{ order.payment_method }}</span></div>
+    <p class="address"><strong>Ship to</strong><br>{{ order.customer_name }}<br>{{ order.email }}<br>{{ order.address }}</p>
+    <hr>
+    <div class="sum-row"><span>Subtotal</span><span>{{ order.subtotal|inr }}</span></div>
+    <div class="sum-row"><span>Shipping</span><span>{% if order.shipping %}{{ order.shipping|inr }}{% else %}FREE{% endif %}</span></div>
+    <div class="sum-row sum-total"><span>Total</span><span>{{ order.total|inr }}</span></div>
+    <a class="btn btn-ghost btn-block" href="{{ url_for('index') }}">Continue shopping</a>
+  </aside>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Orders{% endblock %}
+{% block content %}
+<h1 class="page-title">Orders</h1>
+{% if orders %}
+<div class="panel table-wrap">
+  <table class="table">
+    <thead>
+      <tr><th>Order</th><th>Placed</th><th>Customer</th><th>Items</th><th class="num">Total</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for o in orders %}
+      <tr>
+        <td><strong>#{{ o.id }}</strong></td>
+        <td>{{ o.created_at }}</td>
+        <td>{{ o.customer_name }}<br><span class="muted">{{ o.email }}</span></td>
+        <td>{% for i in o["items"] %}{{ i.emoji }} {{ i.name }} × {{ i.quantity }}{% if not loop.last %}<br>{% endif %}{% endfor %}</td>
+        <td class="num">{{ o.total|inr }}</td>
+        <td><a class="btn btn-ghost" href="{{ url_for('order_detail', order_id=o.id) }}">View</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="panel empty">
+  <p>No orders yet.</p>
+  <a class="btn btn-primary" href="{{ url_for('index') }}">Start shopping</a>
+</div>
+{% endif %}
+{% endblock %}

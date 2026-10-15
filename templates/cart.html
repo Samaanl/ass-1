@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Cart{% endblock %}
+{% block content %}
+<h1 class="page-title">Your cart</h1>
+{% if items %}
+<div class="two-col">
+  <div class="panel">
+    {% for item in items %}
+    <div class="line-item">
+      <div class="thumb thumb-sm">{{ item.emoji }}</div>
+      <div class="line-info">
+        <strong>{{ item.name }}</strong>
+        <span class="muted">{{ item.price|inr }} each</span>
+      </div>
+      <form method="post" action="{{ url_for('update_cart', item_id=item.id) }}" class="qty-form">
+        <input type="number" name="quantity" value="{{ item.quantity }}" min="0" aria-label="Quantity">
+        <button class="btn btn-ghost">Update</button>
+      </form>
+      <span class="line-total">{{ item.line_total|inr }}</span>
+      <form method="post" action="{{ url_for('remove_from_cart', item_id=item.id) }}">
+        <button class="btn btn-icon" title="Remove">✕</button>
+      </form>
+    </div>
+    {% endfor %}
+  </div>
+  <aside class="panel summary">
+    <h2>Summary</h2>
+    <div class="sum-row"><span>Subtotal</span><span>{{ totals.subtotal|inr }}</span></div>
+    <div class="sum-row"><span>Shipping</span><span>{% if totals.shipping %}{{ totals.shipping|inr }}{% else %}FREE{% endif %}</span></div>
+    <div class="sum-row sum-total"><span>Total</span><span>{{ totals.total|inr }}</span></div>
+    <a class="btn btn-primary btn-block" href="{{ url_for('checkout') }}">Proceed to checkout</a>
+    <p class="hint">Free shipping on orders above ₹999.</p>
+  </aside>
+</div>
+{% else %}
+<div class="panel empty">
+  <p>Your cart is empty.</p>
+  <a class="btn btn-primary" href="{{ url_for('index') }}">Start shopping</a>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Shop{% endblock %} · CloudCart {{ architecture }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="{{ url_for('index') }}">
+        <span class="logo">☁️</span> CloudCart
+        <span class="arch arch-{{ architecture|lower }}">{{ architecture }}</span>
+      </a>
+      <nav class="nav">
+        <a href="{{ url_for('index') }}">Shop</a>
+        <a href="{{ url_for('orders') }}">Orders</a>
+        <a href="{{ url_for('status') }}">System status</a>
+        <a class="cart-link" href="{{ url_for('view_cart') }}">🛒 Cart <span class="pill">{{ cart_count }}</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap main">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      {% block footer %}
+      <span><strong>{{ architecture }}</strong> architecture · served by host <code>{{ hostname }}</code></span>
+      <span>Database: <code>{{ db_label }}</code></span>
+      {% endblock %}
+      <span>Built by {{ student_name }} · MCA Cloud Computing Lab</span>
+    </div>
+  </footer>
+</body>
+</html>
